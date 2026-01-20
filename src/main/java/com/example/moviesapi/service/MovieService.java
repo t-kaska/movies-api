@@ -95,7 +95,19 @@ public class MovieService {
     }
 
     // Delete movie
-    public void delete(Long id) {
-        movieRepository.delete(getById(id));
+    public void deleteMovie(Long id, boolean force) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Movie not found with id: " + id));
+
+        // Always remove relationships first
+        movie.getActors().forEach(actor -> actor.getMovies().remove(movie));
+        movie.getActors().clear();
+
+        movie.getGenres().forEach(genre -> genre.getMovies().remove(movie));
+        movie.getGenres().clear();
+
+        movieRepository.delete(movie);
     }
+
 }

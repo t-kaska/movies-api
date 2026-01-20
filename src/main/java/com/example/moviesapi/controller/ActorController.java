@@ -47,9 +47,10 @@ public class ActorController {
     // Delete actor (force optional)
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id,
-                       @RequestParam(defaultValue = "false") boolean force) {
-        actorService.delete(id, force);
+    public void deleteActor(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "false") boolean force) {
+        actorService.deleteActor(id, force);
     }
 
     // Get all movies an actor has appeared in

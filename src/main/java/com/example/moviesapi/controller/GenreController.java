@@ -46,8 +46,9 @@ public class GenreController {
     // Delete genre (force optional)
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id,
-                       @RequestParam(defaultValue = "false") boolean force) {
-        genreService.delete(id, force);
+    public void deleteGenre(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "false") boolean force) {
+        genreService.deleteGenre(id, force);
     }
 }

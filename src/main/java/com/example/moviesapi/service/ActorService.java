@@ -49,21 +49,24 @@ public class ActorService {
     }
 
     // Delete actor, optionally force delete relationships
-    public void delete(Long id, boolean force) {
-        Actor actor = getById(id);
+    public void deleteActor(Long id, boolean force) {
+        Actor actor = actorRepository.findById(id)
+                .orElseThrow(() ->
+                    new ResourceNotFoundException("Actor not found with id: " + id));
 
-        if (!force && !actor.getMovies().isEmpty()) {
+        int movieCount = actor.getMovies().size();
+
+        if (!force && movieCount > 0) {
             throw new IllegalStateException(
                 "Unable to delete actor '" + actor.getName() +
-                "' as they are associated with " + actor.getMovies().size() + " movies."
+                "' as they are associated with " + movieCount + " movies."
             );
         }
 
         // Force deletion: remove actor from all associated movies
         if (force) {
-            for (Movie movie : actor.getMovies()) {
-                movie.getActors().remove(actor);
-            }
+            actor.getMovies().forEach(movie -> movie.getActors().remove(actor));
+            actor.getMovies().clear();
         }
 
         actorRepository.delete(actor);

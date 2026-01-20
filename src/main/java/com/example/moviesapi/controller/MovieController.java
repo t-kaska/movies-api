@@ -58,8 +58,10 @@ public class MovieController {
     // Delete movie
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        movieService.delete(id);
+    public void deleteMovie(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "false") boolean force) {
+        movieService.deleteMovie(id, force);
     }
 
     // Get all actors starring in a movie

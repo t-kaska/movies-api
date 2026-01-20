@@ -42,19 +42,25 @@ public class GenreService {
     }
 
     // Delete genre, optionally force delete relationships
-    public void delete(Long id, boolean force) {
-        Genre genre = getById(id);
+    public void deleteGenre(Long id, boolean force) {
+        Genre genre = genreRepository.findById(id)
+            .orElseThrow(() ->
+                new ResourceNotFoundException("Genre not found with id: " + id));
 
-        if (!force && !genre.getMovies().isEmpty()) {
+        int movieCount = genre.getMovies().size();
+
+        // Default deletion (force = false)
+        if (!force && movieCount > 0) {
             throw new IllegalStateException(
                 "Cannot delete genre '" + genre.getName() +
-                "' because it has " + genre.getMovies().size() + " associated movies."
+                "' because it has " + movieCount + " associated movies."
             );
         }
 
         // Force deletion: remove genre from all associated movies
         if (force) {
             genre.getMovies().forEach(movie -> movie.getGenres().remove(genre));
+            genre.getMovies().clear();
         }
 
         genreRepository.delete(genre);
