@@ -27,6 +27,11 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // checking if db exists
+        if (genreRepository.count() > 0) {
+            return;
+        }
+
         // creating genres
         Genre action = new Genre();
         action.setName("Action");
