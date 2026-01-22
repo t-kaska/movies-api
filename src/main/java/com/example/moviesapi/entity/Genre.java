@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Genre {
 
@@ -19,6 +21,7 @@ public class Genre {
     @Column(unique = true)
     private String name;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "genres")
     private Set<Movie> movies = new HashSet<>();
 

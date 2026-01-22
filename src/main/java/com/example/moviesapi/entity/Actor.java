@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Actor {
@@ -25,6 +26,7 @@ public class Actor {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;  // ISO 8601 format (YYYY-MM-DD)
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "actors")
     private Set<Movie> movies = new HashSet<>();
 
