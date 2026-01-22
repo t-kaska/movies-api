@@ -33,6 +33,7 @@ public class Movie {
         joinColumns = @JoinColumn(name = "movie_id"),
         inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
+    @OrderBy("name ASC") // consistently sort genres alphabetically
     private Set<Genre> genres = new HashSet<>();
 
     @ManyToMany
@@ -41,6 +42,7 @@ public class Movie {
         joinColumns = @JoinColumn(name = "movie_id"),
         inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
+    @OrderBy("name ASC") // consistently sort actors alphabetically
     private Set<Actor> actors = new HashSet<>();
 
     // --- Getters ---
