@@ -27,19 +27,50 @@ public class MovieController {
         return movieService.create(movie);
     }
 
-    // Get all movies with optional filtering
+    // Get all movies with optional filtering and pagination
     @GetMapping
     public Page<Movie> getAll(
-            Pageable pageable,
+            @RequestParam(required=false) Integer page,
+            @RequestParam(required=false) Integer size,
             @RequestParam(required = false) Long genre,
             @RequestParam(required = false) Integer year,
-            @RequestParam(required = false) Long actor) {
-
+            @RequestParam(required = false) Long actor
+    ) {
+        // If filters exist -> return filtered results (no pagination)
         if (genre != null || year != null || actor != null) {
             List<Movie> filtered = movieService.filter(genre, year, actor);
-            return new PageImpl<>(filtered);
+            return new PageImpl<>(filtered, 
+                Pageable.unpaged(), 
+                filtered.size()
+            );
         }
 
+        // If pagination params are NOT provided → return ALL movies sorted by ID ASC
+        if (page == null || size == null) {
+            List<Movie> allMovies = movieService.getAllSortedById();
+            return new PageImpl<>(
+                    allMovies,
+                    Pageable.unpaged(),
+                    allMovies.size()
+            );
+        }
+
+
+
+
+        // Validate pagination parameters
+        if (page < 0 || size <= 0 || size > 100) {
+            throw new IllegalArgumentException("Invalid pagination parameters: page must be >= 0, size must be 1-100");
+        }
+
+        Pageable pageable = PageRequest.of(
+            page, 
+            size, 
+            Sort.by("id").ascending());
+
+
+
+        // Otherwise return paginated results
         return movieService.getAll(pageable);
     }
 
@@ -60,7 +91,8 @@ public class MovieController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMovie(
             @PathVariable Long id,
-            @RequestParam(defaultValue = "false") boolean force) {
+            @RequestParam(defaultValue = "false") boolean force
+    ) {
         movieService.deleteMovie(id, force);
     }
 

@@ -7,6 +7,7 @@ import com.example.moviesapi.repository.ActorRepository;
 import com.example.moviesapi.repository.MovieRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -109,5 +110,11 @@ public class MovieService {
 
         movieRepository.delete(movie);
     }
+
+    // Get sorted list
+    public List<Movie> getAllSortedById() {
+        return movieRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+}
+
 
 }
