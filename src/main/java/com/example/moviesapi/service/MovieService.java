@@ -1,9 +1,11 @@
 package com.example.moviesapi.service;
 
 import com.example.moviesapi.entity.Actor;
+import com.example.moviesapi.entity.Genre;
 import com.example.moviesapi.entity.Movie;
 import com.example.moviesapi.exception.ResourceNotFoundException;
 import com.example.moviesapi.repository.ActorRepository;
+import com.example.moviesapi.repository.GenreRepository;
 import com.example.moviesapi.repository.MovieRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,14 +21,46 @@ public class MovieService {
 
     private final MovieRepository movieRepository;
     private final ActorRepository actorRepository;
+    private final GenreRepository genreRepository;
 
-    public MovieService(MovieRepository movieRepository, ActorRepository actorRepository) {
+    public MovieService(MovieRepository movieRepository, ActorRepository actorRepository, GenreRepository genreRepository) {
         this.movieRepository = movieRepository;
         this.actorRepository = actorRepository;
+        this.genreRepository = genreRepository;
     }
 
     // Create a movie
     public Movie create(Movie movie) {
+
+        // Resolve actors by ID
+        if (movie.getActors() != null) {
+            Set<Actor> resolvedActors = new HashSet<>();
+            for (Actor actor : movie.getActors()) {
+                    Actor existingActor = actorRepository.findById(actor.getId())
+                        .orElseThrow(() ->
+                            new ResourceNotFoundException("Actor not found with id: " + actor.getId()
+                            )
+                        );
+                    resolvedActors.add(existingActor);
+            }
+            movie.getActors().clear();
+            movie.getActors().addAll(resolvedActors);
+        }
+
+        // Resolve genres by ID
+        if (movie.getGenres() != null) {
+            Set<Genre> resolvedGenres = new HashSet<>();
+            for (Genre genre : movie.getGenres()) {
+                Genre existingGenre = genreRepository.findById(genre.getId())
+                    .orElseThrow(() ->
+                        new ResourceNotFoundException("Genre not found with id: " + genre.getId()
+                        )
+                    );
+                resolvedGenres.add(existingGenre);
+            }
+            movie.getGenres().clear();
+            movie.getGenres().addAll(resolvedGenres);
+        }
         return movieRepository.save(movie);
     }
 
@@ -75,10 +109,21 @@ public class MovieService {
             movie.getActors().addAll(resolvedActors);
         }
 
-        // Update genres (assumes genres are already managed elsewhere)
+        // Update genres
         if (updates.getGenres() != null) {
+            Set<Genre> resolvedGenres = new HashSet<>();
+            for (Genre genre : updates.getGenres()) {
+                Genre existingGenre = genreRepository.findById(genre.getId())
+                    .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                            "Genre not found with id: " + genre.getId()
+                        )
+                    );
+                resolvedGenres.add(existingGenre);
+            }
+
             movie.getGenres().clear();
-            movie.getGenres().addAll(updates.getGenres());
+            movie.getGenres().addAll(resolvedGenres);
         }
 
         return movieRepository.save(movie);
