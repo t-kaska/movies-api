@@ -135,8 +135,11 @@ public class MovieService {
         return List.copyOf(movie.getActors());
     }
 
-    // Search movies by title (case-insensitive)
+    // Search movies by title (case-insensitive, partial match)
     public List<Movie> search(String title) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Search title must not be empty");
+        }
         return movieRepository.findByTitleIgnoreCaseContaining(title);
     }
 
