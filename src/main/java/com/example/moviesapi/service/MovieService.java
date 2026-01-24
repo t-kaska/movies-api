@@ -92,7 +92,7 @@ public class MovieService {
         if (updates.getDuration() != null) movie.setDuration(updates.getDuration());
 
         // Update actors (add/remove)
-        if (updates.getActors() != null) {
+        if (updates.getActors() != null && !updates.getActors().isEmpty()) {
             Set<Actor> resolvedActors = new HashSet<>();
 
             for (Actor actor : updates.getActors()) {
@@ -110,7 +110,7 @@ public class MovieService {
         }
 
         // Update genres
-        if (updates.getGenres() != null) {
+        if (updates.getGenres() != null && !updates.getGenres().isEmpty()) {
             Set<Genre> resolvedGenres = new HashSet<>();
             for (Genre genre : updates.getGenres()) {
                 Genre existingGenre = genreRepository.findById(genre.getId())
