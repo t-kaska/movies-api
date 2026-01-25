@@ -30,8 +30,8 @@ public class MovieController {
     // Get all movies with optional filtering and pagination
     @GetMapping
     public Page<Movie> getAll(
-            @RequestParam(required=false) Integer page,
-            @RequestParam(required=false) Integer size,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long genre,
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Long actor
