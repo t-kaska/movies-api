@@ -62,6 +62,7 @@ To reset the database and reload sample data, delete the `movies.db` file and re
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/movies` | Retrieve all movies (paginated) |
+| GET | `/api/movies?page=0&size=100` | Retrieve all movies (on one page) |
 | GET | `/api/movies/{id}` | Retrieve a specific movie by ID |
 | GET | `/api/movies?genre={genreId}` | Filter movies by genre |
 | GET | `/api/movies?year={releaseYear}` | Filter movies by release year |
