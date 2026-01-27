@@ -20,73 +20,53 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    // Create a new movie
+    // CREATE
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Movie create(@Valid @RequestBody Movie movie) {
         return movieService.create(movie);
     }
 
-    // Get all movies with optional filtering and pagination
+    // GET ALL / FILTERED / PAGINATED
     @GetMapping
     public Page<Movie> getAll(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Long genre,
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Long actor
     ) {
-        // If filters exist -> return filtered results (no pagination)
-        if (genre != null || year != null || actor != null) {
-            List<Movie> filtered = movieService.filter(genre, year, actor);
-            return new PageImpl<>(filtered, 
-                Pageable.unpaged(), 
-                filtered.size()
-            );
-        }
-
-        // If pagination params are NOT provided → return ALL movies sorted by ID ASC
-        if (page == null || size == null) {
-            List<Movie> allMovies = movieService.getAllSortedById();
-            return new PageImpl<>(
-                    allMovies,
-                    Pageable.unpaged(),
-                    allMovies.size()
-            );
-        }
-
-
-
-
-        // Validate pagination parameters
         if (page < 0 || size <= 0 || size > 100) {
-            throw new IllegalArgumentException("Invalid pagination parameters: page must be >= 0, size must be 1-100");
+            throw new IllegalArgumentException(
+                    "Invalid pagination parameters: page must be >= 0, size must be 1-100"
+            );
         }
 
         Pageable pageable = PageRequest.of(
-            page, 
-            size, 
-            Sort.by("id").ascending());
+                page,
+                size,
+                Sort.by("id").ascending()
+        );
 
-
-
-        // Otherwise return paginated results
-        return movieService.getAll(pageable);
+        return movieService.getAll(genre, year, actor, pageable);
     }
 
-    // Get movie by ID
+    // GET BY ID
     @GetMapping("/{id}")
     public Movie getById(@PathVariable Long id) {
         return movieService.getById(id);
     }
 
-    // Partial update (PATCH)
+    // PATCH
     @PatchMapping("/{id}")
-    public Movie update(@PathVariable Long id, @RequestBody Movie updates) {
+    public Movie update(
+            @PathVariable Long id,
+            @RequestBody Movie updates
+    ) {
         return movieService.update(id, updates);
     }
 
-    // Delete movie
+    // DELETE
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMovie(
@@ -96,15 +76,25 @@ public class MovieController {
         movieService.deleteMovie(id, force);
     }
 
-    // Get all actors starring in a movie
+    // ACTORS IN MOVIE
     @GetMapping("/{id}/actors")
     public List<Actor> getActors(@PathVariable Long id) {
         return movieService.getActors(id);
     }
 
-    // Search movies by title (case-insensitive, partial match)
+    // SEARCH (PAGINATED)
     @GetMapping("/search")
-    public List<Movie> search(@RequestParam String title) {
-        return movieService.search(title);
+    public Page<Movie> search(
+            @RequestParam String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("id").ascending()
+        );
+
+        return movieService.search(title, pageable);
     }
 }
