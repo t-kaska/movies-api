@@ -272,9 +272,21 @@ The API implements full CRUD operations for Movies, Genres, and Actors. Many-to-
 
 ### Extra Features
 
-**Pagination:** All list endpoints support pagination with `page` and `size` parameters, returning paginated results with metadata about total elements and pages.
+**Pagination:** 
+All list endpoints support pagination with `page` and `size` parameters, returning paginated results with metadata about total elements and pages.
 
-**Basic Search:** Case-insensitive partial match search for movies by title is available through the `/api/movies/search?title={title}` endpoint.
+**Basic Search:** 
+Case-insensitive partial match search for movies by title is available through the `/api/movies/search?title={title}` endpoint.
+
+**Combined Filtering:** 
+Filter movies by multiple criteria simultaneously using query parameters: 
+`genre`, `year` and/or `actor`.
+
+Example:
+`/api/movies?genre=4&year=2000&actor=5`
+
+Pagination is supported using the `page` and `size` parameters: 
+`/api/movies?genre=4&year=2000&actor=5&page=0&size=10`
 
 ## Authors
 
