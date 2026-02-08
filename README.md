@@ -288,6 +288,17 @@ Example:
 Pagination is supported using the `page` and `size` parameters: 
 `/api/movies?genre=4&year=2000&actor=5&page=0&size=10`
 
+## API Testing with Postman
+
+A Postman collection is included in the `postman/` directory.
+
+### How to use:
+1. Open Postman
+2. Click Import
+3. Select `postman/Movie-Database-API.postman_collection.json` from Your project
+4. (Optional) Import the environment file
+5. Run requests against `http://localhost:8080`
+
 ## Authors
 
 Tõnis Kaska, Elisabeth Kuulmann
