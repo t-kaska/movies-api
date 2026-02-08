@@ -225,6 +225,8 @@ To test the API using Postman, first ensure the application is running at `http:
 ```
 movie-api/
 ├── .mvn/                    # Maven wrapper configuration
+├── postman/
+|   ├── Movie Database API.postman_collection.json
 ├── src/
 │   ├── main/
 │   │   ├── java/com/example/moviesapi/
@@ -295,12 +297,13 @@ A Postman collection is included in the `postman/` directory.
 ### How to use:
 1. Open Postman
 2. Click Import
-3. Select `postman/Movie-Database-API.postman_collection.json` from Your project
+3. Select `postman/Movie Database API.postman_collection.json` from Your project
 4. (Optional) Import the environment file
 5. Run requests against `http://localhost:8080`
 
 ## Authors
 
 Tõnis Kaska, Elisabeth Kuulmann
+❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤
 
 
