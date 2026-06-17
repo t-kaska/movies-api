@@ -223,7 +223,7 @@ To test the API using Postman, first ensure the application is running at `http:
 ## Project Structure
 
 ```
-movie-api/
+movies-api/
 ├── .mvn/                    # Maven wrapper configuration
 ├── postman/
 |   ├── Movie Database API.postman_collection.json
